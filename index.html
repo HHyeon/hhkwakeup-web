@@ -1,0 +1,142 @@
+    <html>
+<head>
+    <title>hhkwakeup! in web</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+
+        .mainbutton {
+            transition: all .2s ease-in-out;
+            padding: 5%;
+        }
+
+        .mainbutton:hover {
+            transform: scale(1.1);
+        } 
+
+        @keyframes shake{
+            0%{
+            transform: translateX(50%)
+            }
+            25%{
+            transform: translateX(45%);
+            }
+            50%{
+            transform: translateX(55%);
+            }
+            100%{
+            transform: translateX(50%);
+            }
+        }
+
+        .animationedlabel.shake {
+            width: 50%;
+            left: 50%;
+            animation-duration: 0.4s;
+            animation-name: shake;
+        }
+
+    </style>
+    
+    <script src="https://kit.fontawesome.com/2fa994d69c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div>
+        <i id="powerbtn" class="fa-solid fa-power-off fa-10x mainbutton" onclick="powerbtn_click()"></i>
+        <h2 class="animationedlabel">Standby</h2>
+        <i id="storagebtn" class="fa-regular fa-hard-drive fa-5x mainbutton" onclick="storagebtn_click()"></i>
+    </div>
+
+    <script>
+
+    function hddwake() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=hddwake`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    };
+
+    function check() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=check`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    };
+
+    function wake() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=wake`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    };
+
+    animedlabel = document.querySelector(".animationedlabel");
+    animedlabel.addEventListener("animationend", () => {
+        animedlabel.classList.remove('shake');
+    });
+
+    function checkandapplyui() {
+        const result = JSON.parse(check());
+        // console.log(result);
+
+        if(result["ret"])
+        {
+            if(result["check"])
+            {
+                document.getElementById("powerbtn").style.color = "greenyellow";
+                animedlabel.innerHTML = "Running"
+            }
+            else
+            {
+                document.getElementById("powerbtn").style.color = "gray";
+                animedlabel.innerHTML = "Standby"
+            }
+
+            animedlabel.classList.toggle('shake');
+        }
+        else
+        {
+            console.log("php returns Failed");
+        }
+    }
+
+    function powerbtn_click() {
+        console.log("powerbtn_click");
+
+        if(confirm("confirm?"))
+        {
+            wake();
+        }
+    }
+
+    function storagebtn_click() {
+        console.log("storagebtn_click");
+
+        if(confirm("confirm?"))
+        {
+            hddwake();
+        }
+    }
+
+    checkandapplyui();
+    setInterval(checkandapplyui, 3000);
+
+    </script>
+
+</body>
+</html>
