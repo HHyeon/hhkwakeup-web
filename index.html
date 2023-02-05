@@ -53,15 +53,18 @@
         }
 
         .hdslayout {
-            justify-content: center;
-            display: flex;
-        }
-        .hdslayout h2 {
-            justify-content: center;
-            margin-top: 6px;
-            margin-right: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 20%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
         }
 
+        .hdslayout * {
+            align-self: center;
+            justify-self: center;
+        }
+        
     </style>
     
     <script src="https://kit.fontawesome.com/2fa994d69c.js" crossorigin="anonymous"></script>
@@ -71,16 +74,14 @@
 
     <div>
         <i id="powerbtn" class="fa-solid fa-power-off fa-10x mainbutton" onclick="powerbtn_click()"></i>
-        <h2 class="animationedlabel">Standby</h2>
+        <h2 class="animationedlabel"></h2>
         <i id="storagebtn" class="fa-regular fa-hard-drive fa-5x mainbutton" onclick="storagebtn_click()"></i>
 
         <div class="hdslayout">
             <h2>sda</h2>
-            <h1 class="sda_state">Standby</h1>
-        </div>
-        <div class="hdslayout">
+            <h1 class="sda_state"></h1>
             <h2>sdb</h2>
-            <h1 class="sdb_state">Standby</h1>
+            <h1 class="sdb_state"></h1>
         </div>
     </div>
 
@@ -126,10 +127,11 @@
         return xmlhttp.responseText;
     }
 
-    animedlabel = document.querySelector(".animationedlabel");
+    let animedlabel = document.querySelector(".animationedlabel");
     animedlabel.addEventListener("animationend", () => {
         animedlabel.classList.remove('shake');
     });
+    
 
     function checkandapplyui() {
         let result = JSON.parse(check());
@@ -189,7 +191,7 @@
         else {
             console.log("php returns Failed");
         }
-
+        
     }
 
     function powerbtn_click() {
