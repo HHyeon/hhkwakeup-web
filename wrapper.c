@@ -12,7 +12,7 @@
       *          arbitary commands if not.
       * */
 
-     system ("/bin/sh ./hddwake.sh");
+     system ("/bin/sh hds_sdb.sh");
 
      return 0;
    }

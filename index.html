@@ -24,15 +24,21 @@
             transform: scale(1.1);
         } 
 
-        @keyframes shake{
+        @keyframes shake-animation{
             0%{
             transform: translateX(50%)
             }
-            25%{
+            20%{
             transform: translateX(45%);
             }
-            50%{
+            40%{
             transform: translateX(55%);
+            }
+            60%{
+            transform: translateX(48%);
+            }
+            80%{
+            transform: translateX(52%);
             }
             100%{
             transform: translateX(50%);
@@ -43,7 +49,17 @@
             width: 50%;
             left: 50%;
             animation-duration: 0.4s;
-            animation-name: shake;
+            animation-name: shake-animation;
+        }
+
+        .hdslayout {
+            justify-content: center;
+            display: flex;
+        }
+        .hdslayout h2 {
+            justify-content: center;
+            margin-top: 6px;
+            margin-right: 30px;
         }
 
     </style>
@@ -57,6 +73,15 @@
         <i id="powerbtn" class="fa-solid fa-power-off fa-10x mainbutton" onclick="powerbtn_click()"></i>
         <h2 class="animationedlabel">Standby</h2>
         <i id="storagebtn" class="fa-regular fa-hard-drive fa-5x mainbutton" onclick="storagebtn_click()"></i>
+
+        <div class="hdslayout">
+            <h2>sda</h2>
+            <h1 class="sda_state">Standby</h1>
+        </div>
+        <div class="hdslayout">
+            <h2>sdb</h2>
+            <h1 class="sdb_state">Standby</h1>
+        </div>
     </div>
 
     <script>
@@ -85,13 +110,29 @@
         return xmlhttp.responseText;
     };
 
+    function hds_sda() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=hds_sda`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    }
+
+    function hds_sdb() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=hds_sdb`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    }
+
     animedlabel = document.querySelector(".animationedlabel");
     animedlabel.addEventListener("animationend", () => {
         animedlabel.classList.remove('shake');
     });
 
     function checkandapplyui() {
-        const result = JSON.parse(check());
+        let result = JSON.parse(check());
         // console.log(result);
 
         if(result["ret"])
@@ -113,12 +154,48 @@
         {
             console.log("php returns Failed");
         }
+
+        result = JSON.parse(hds_sda());
+        
+        if(result["ret"]) {
+
+            const resp = result["hds_sda"];
+
+            if(resp.includes('active')) {
+                document.querySelector(".sda_state").innerText = "Active";
+            }
+            if(resp.includes('standby')) {
+                document.querySelector(".sda_state").innerText = "Standby";
+            }
+        }
+        else {
+            console.log("php returns Failed");
+        }
+        
+
+        result = JSON.parse(hds_sdb());
+        
+        if(result["ret"]) {
+
+            const resp = result["hds_sdb"];
+
+            if(resp.includes('active')) {
+                document.querySelector(".sdb_state").innerText = "Active";
+            }
+            if(resp.includes('standby')) {
+                document.querySelector(".sdb_state").innerText = "Standby";
+            }
+        }
+        else {
+            console.log("php returns Failed");
+        }
+
     }
 
     function powerbtn_click() {
         console.log("powerbtn_click");
 
-        if(confirm("confirm?"))
+        if(confirm("hddwake confirm?"))
         {
             wake();
         }
@@ -127,7 +204,7 @@
     function storagebtn_click() {
         console.log("storagebtn_click");
 
-        if(confirm("confirm?"))
+        if(confirm("etherwake confirm?"))
         {
             hddwake();
         }

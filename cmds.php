@@ -32,9 +32,22 @@ if(isset($_GET["p"]))
     }
     else if($param == "hddwake")
     {
-        $output = exec('./hddwake');
-        $jsonresult["hddwake"] = $output;
+        $output = exec('./hddwake > /dev/null 2>&1 &');
 
+        $jsonresult["ret"]=TRUE;
+    }
+    else if($param == "hds_sda")
+    {
+        $output = exec('./hds_sda');
+        $jsonresult["hds_sda"] = $output;
+        
+        $jsonresult["ret"]=TRUE;
+    }
+    else if($param == "hds_sdb")
+    {
+        $output = exec("./hds_sdb");
+        $jsonresult['hds_sdb'] = $output;
+        
         $jsonresult["ret"]=TRUE;
     }
     else
