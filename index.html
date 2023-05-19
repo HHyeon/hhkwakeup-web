@@ -82,6 +82,8 @@
             <h1 class="sda_state"></h1>
             <h2>sdb</h2>
             <h1 class="sdb_state"></h1>
+            <h2>sdc</h2>
+            <h1 class="sdc_state"></h1>
         </div>
     </div>
 
@@ -122,6 +124,14 @@
     function hds_sdb() {
         let xmlhttp = new XMLHttpRequest();
         let url=`cmds.php?p=hds_sdb`;
+        xmlhttp.open("GET", url, false);
+        xmlhttp.send(null);
+        return xmlhttp.responseText;
+    }
+
+    function hds_sdc() {
+        let xmlhttp = new XMLHttpRequest();
+        let url=`cmds.php?p=hds_sdc`;
         xmlhttp.open("GET", url, false);
         xmlhttp.send(null);
         return xmlhttp.responseText;
@@ -191,7 +201,25 @@
         else {
             console.log("php returns Failed");
         }
-        
+
+	result = JSON.parse(hds_sdc());
+
+        if(result["ret"]) {
+
+            const resp = result["hds_sdc"];
+
+            if(resp.includes('active')) {
+                document.querySelector(".sdc_state").innerText = "Active";
+            }
+            if(resp.includes('standby')) {
+                document.querySelector(".sdc_state").innerText = "Standby";
+            }
+        }
+        else {
+            console.log("php returns Failed");
+        }
+
+
     }
 
     function powerbtn_click() {

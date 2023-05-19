@@ -50,6 +50,13 @@ if(isset($_GET["p"]))
         
         $jsonresult["ret"]=TRUE;
     }
+    else if($param == "hds_sdc")
+    {
+        $output = exec("./hds_sdc");
+        $jsonresult['hds_sdc'] = $output;
+
+        $jsonresult["ret"]=TRUE;
+    }
     else
     {
         $jsonresult["ret"]=FALSE;
